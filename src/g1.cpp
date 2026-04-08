@@ -23,31 +23,23 @@ inline static std::vector<std::string> noHandsFilteredLinks()
   return {"left_rubber_hand", "right_rubber_hand"};
 }
 
-inline static std::string leftAttachLink(const std::string & variant)
+inline static std::string leftAttachLink()
 {
-  return (variant == "23dof") ? "left_elbow_link" : "left_wrist_yaw_link";
+  return "left_wrist_yaw_link";
 }
 
-inline static std::string rightAttachLink(const std::string & variant)
+inline static std::string rightAttachLink()
 {
-  return (variant == "23dof") ? "right_elbow_link" : "right_wrist_yaw_link";
+  return "right_wrist_yaw_link";
 }
 
-inline static sva::PTransformd leftAttachX(const std::string & variant)
+inline static sva::PTransformd leftAttachX()
 {
-  if(variant == "23dof")
-  {
-    return sva::PTransformd(Eigen::Vector3d(0.100, 0.00188791, -0.010));
-  }
   return sva::PTransformd(Eigen::Vector3d(0.0415, 0.003, 0.));
 }
 
-inline static sva::PTransformd rightAttachX(const std::string & variant)
+inline static sva::PTransformd rightAttachX()
 {
-  if(variant == "23dof")
-  {
-    return sva::PTransformd(Eigen::Vector3d(0.100, -0.00188791, -0.010));
-  }
   return sva::PTransformd(Eigen::Vector3d(0.0415, -0.003, 0.));
 }
 
@@ -191,17 +183,17 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & variant, cons
 
   auto g1Left = g1NoHands->connect(
       *leftRevo2,
-      leftAttachLink(variant),
+      leftAttachLink(),
       "left_base_link",
       "",
-      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(leftAttachX(variant)));
+      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(leftAttachX()));
 
   auto g1Both = g1Left.connect(
       *rightRevo2,
-      rightAttachLink(variant),
+      rightAttachLink(),
       "right_base_link",
       "",
-      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(rightAttachX(variant)));
+      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(rightAttachX()));
 
   return new mc_rbdyn::RobotModule(g1Both);
 }
