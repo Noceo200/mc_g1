@@ -35,14 +35,12 @@ inline static std::string rightAttachLink()
 
 inline static sva::PTransformd leftAttachX()
 {
-  return sva::PTransformd(Eigen::Vector3d(0., 0., 0.));
-  //return sva::PTransformd(Eigen::Vector3d(0.0415, 0.003, 0.));
+  return sva::PTransformd(Eigen::Vector3d(0.0415, 0.003, 0.));
 }
 
 inline static sva::PTransformd rightAttachX()
 {
-  return sva::PTransformd(Eigen::Vector3d(0., 0., 0.));
-  //return sva::PTransformd(Eigen::Vector3d(0.0415, -0.003, 0.));
+  return sva::PTransformd(Eigen::Vector3d(0.0415, -0.003, 0.));
 }
 
 G1RobotModule::G1RobotModule(const std::string & variant)
@@ -180,14 +178,20 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & module_name)
       leftAttachLink(),
       "left_base_link",
       "",
-      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(leftAttachX()));
+      mc_rbdyn::RobotModule::ConnectionParameters{}
+        .name(module_name)
+        .X_other_connection(leftAttachX())
+        .bodySensorMapping({{"FloatingBase", "FloatingBase_LeftHand"}}));
 
   auto g1Both = g1Left.connect(
       *rightRevo2,
       rightAttachLink(),
       "right_base_link",
       "",
-      mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(rightAttachX()));
+      mc_rbdyn::RobotModule::ConnectionParameters{}
+        .name(module_name)
+        .X_other_connection(rightAttachX())
+        .bodySensorMapping({{"FloatingBase", "FloatingBase_RightHand"}}));
 
   return new mc_rbdyn::RobotModule(g1Both);
 }
