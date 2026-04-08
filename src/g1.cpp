@@ -20,10 +20,10 @@ inline static std::string g1Variant(const std::string & variant)
 
 inline static std::vector<std::string> noHandsFilteredLinks(const std::string & variant)
 {
-  if(variant == "23dof")
+  /*if(variant == "23dof")
   {
     return {"left_wrist_roll_rubber_hand", "right_wrist_roll_rubber_hand"};
-  }
+  }*/
 
   return {"left_rubber_hand", "right_rubber_hand"};
 }
