@@ -18,9 +18,9 @@ inline static std::string g1Variant(const std::string & variant)
   return fullName;
 }
 
-inline static std::vector<std::string> noHandsFilteredLinks()
+inline static bool has29DofUpperBody(const std::string & variant)
 {
-  return {"left_rubber_hand", "right_rubber_hand"};
+  return variant == "29dof" || variant == "29dof_no_hands";
 }
 
 inline static std::string leftAttachLink()
@@ -43,7 +43,7 @@ inline static sva::PTransformd rightAttachX()
   return sva::PTransformd(Eigen::Vector3d(0.0415, -0.003, 0.));
 }
 
-G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
+G1RobotModule::G1RobotModule(const std::string & variant)
 : RobotModule(mc_rtc::G1_DESCRIPTION_PATH, 
               g1Variant(variant),
               std::string(mc_rtc::G1_DESCRIPTION_PATH) + "/urdf/" + g1Variant(variant) + ".urdf")
@@ -57,15 +57,7 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
   // True if the robot has a fixed base, false otherwise
   bool fixed = false;
   // Makes all the basic initialization that can be done from an URDF file
-  if(no_hands)
-  {
-    mc_rtc::log::info("G1RobotModule loading with no_hands filtering");
-    init(rbd::parsers::from_urdf_file(urdf_path, fixed, noHandsFilteredLinks()));
-  }
-  else
-  {
-    init(rbd::parsers::from_urdf_file(urdf_path, fixed));
-  }
+  init(rbd::parsers::from_urdf_file(urdf_path, fixed));
 
   _ref_joint_order = {
       "left_hip_pitch_joint",      "left_hip_roll_joint",       "left_hip_yaw_joint",
@@ -74,7 +66,7 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
       "right_knee_joint",          "right_ankle_pitch_joint",   "right_ankle_roll_joint",
       "waist_yaw_joint"};
 
-  if(variant == "29dof")
+  if(has29DofUpperBody(variant))
   {
     _ref_joint_order.push_back("waist_roll_joint");
     _ref_joint_order.push_back("waist_pitch_joint");
@@ -84,7 +76,7 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
       "left_shoulder_pitch_joint", "left_shoulder_roll_joint",
       "left_shoulder_yaw_joint",   "left_elbow_joint",          "left_wrist_roll_joint"});
 
-  if(variant == "29dof")
+  if(has29DofUpperBody(variant))
   {
     _ref_joint_order.push_back("left_wrist_pitch_joint");
     _ref_joint_order.push_back("left_wrist_yaw_joint");
@@ -94,7 +86,7 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
       "right_shoulder_pitch_joint","right_shoulder_roll_joint", "right_shoulder_yaw_joint",
       "right_elbow_joint",         "right_wrist_roll_joint"});
 
-  if(variant == "29dof")
+  if(has29DofUpperBody(variant))
   {
     _ref_joint_order.push_back("right_wrist_pitch_joint");
     _ref_joint_order.push_back("right_wrist_yaw_joint");
@@ -125,7 +117,7 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
   _stance["right_elbow_joint"] = {0.6};
   _stance["right_wrist_roll_joint"] = {0.0};
 
-  if(variant == "29dof")
+  if(has29DofUpperBody(variant))
   {
     _stance["waist_roll_joint"] = {0.0};
     _stance["waist_pitch_joint"] = {0.0};
@@ -168,9 +160,9 @@ G1RobotModule::G1RobotModule(const std::string & variant, bool no_hands)
   _commonSelfCollisions = _minimalSelfCollisions;
 }
 
-static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & variant, const std::string & module_name)
+static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & module_name)
 {
-  auto g1NoHands = std::make_shared<mc_robots::G1RobotModule>(variant, true);
+  auto g1NoHands = std::make_shared<mc_robots::G1RobotModule>("29dof_no_hands");
 
   auto leftRevo2 = mc_rbdyn::RobotLoader::get_robot_module("Revo2_LeftHand");
   auto rightRevo2 = mc_rbdyn::RobotLoader::get_robot_module("Revo2_RightHand");
@@ -223,11 +215,11 @@ extern "C"
     }
     else if(n == "G1_no_hands")
     {
-      return new mc_robots::G1RobotModule("29dof", true);
+      return new mc_robots::G1RobotModule("29dof_no_hands");
     }
     else if(n == "G1_Revo2")
     {
-      return mc_robots::makeG1WithRevo2("29dof", "g1_29dof_revo2");
+      return mc_robots::makeG1WithRevo2("g1_29dof_revo2");
     }
     else
     {
