@@ -201,7 +201,7 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & variant, cons
       "",
       mc_rbdyn::RobotModule::ConnectionParameters{}.name(module_name).X_other_connection(leftAttachX(variant)));
 
-  auto g1Both = g1Left->connect(
+  auto g1Both = g1Left.connect(
       *rightRevo2,
       rightAttachLink(variant),
       "right_base_link",
