@@ -35,12 +35,18 @@ inline static std::string rightAttachLink()
 
 inline static sva::PTransformd leftAttachX()
 {
-  return sva::PTransformd::Identity();
+  const auto R = (Eigen::AngleAxisd(mc_rtc::constants::PI / 2., Eigen::Vector3d::UnitX())
+                  * Eigen::AngleAxisd(mc_rtc::constants::PI / 2., Eigen::Vector3d::UnitY()))
+                     .toRotationMatrix();
+  return sva::PTransformd(R, Eigen::Vector3d::Zero());
 }
 
 inline static sva::PTransformd rightAttachX()
 {
-  return sva::PTransformd::Identity();
+  const auto R = (Eigen::AngleAxisd(mc_rtc::constants::PI / 2., Eigen::Vector3d::UnitX())
+                  * Eigen::AngleAxisd(mc_rtc::constants::PI / 2., Eigen::Vector3d::UnitY()))
+                     .toRotationMatrix();
+  return sva::PTransformd(R, Eigen::Vector3d::Zero());
 }
 
 G1RobotModule::G1RobotModule(const std::string & variant)
