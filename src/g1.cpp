@@ -157,6 +157,7 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & module_name)
       "",
       mc_rbdyn::RobotModule::ConnectionParameters{}
         .name(module_name)
+        .X_other_connection()
         .bodySensorMapping({{"FloatingBase", "FloatingBase_LeftHand"}}));
 
   auto g1Both = g1Left.connect(
@@ -166,6 +167,7 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & module_name)
       "",
       mc_rbdyn::RobotModule::ConnectionParameters{}
         .name(module_name)
+        .X_other_connection()
         .bodySensorMapping({{"FloatingBase", "FloatingBase_RightHand"}}));
 
   return new mc_rbdyn::RobotModule(g1Both);
