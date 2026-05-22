@@ -3,10 +3,7 @@
 
 #include <mc_rtc/constants.h>
 #include <mc_rtc/logging.h>
-#include <mc_rbdyn/RobotLoader.h>
 #include <RBDyn/parsers/urdf.h>
-
-#include <memory>
 
 namespace mc_robots
 {
@@ -21,26 +18,6 @@ inline static std::string g1Variant(const std::string & variant)
 inline static bool has29DofUpperBody(const std::string & variant)
 {
   return variant == "29dof" || variant == "29dof_no_hands";
-}
-
-inline static std::string leftAttachLink()
-{
-  return "left_tool_attach";
-}
-
-inline static std::string rightAttachLink()
-{
-  return "right_tool_attach";
-}
-
-inline static sva::PTransformd leftAttachX()
-{
-  return sva::PTransformd::Identity();
-}
-
-inline static sva::PTransformd rightAttachX()
-{
-  return sva::PTransformd::Identity();
 }
 
 G1RobotModule::G1RobotModule(const std::string & variant)
@@ -175,22 +152,20 @@ static mc_rbdyn::RobotModule * makeG1WithRevo2(const std::string & module_name)
 
   auto g1Left = g1NoHands->connect(
       *leftRevo2,
-      leftAttachLink(),
+      "left_tool_attach",
       "left_base_link",
       "",
       mc_rbdyn::RobotModule::ConnectionParameters{}
         .name(module_name)
-        .X_other_connection(leftAttachX())
         .bodySensorMapping({{"FloatingBase", "FloatingBase_LeftHand"}}));
 
   auto g1Both = g1Left.connect(
       *rightRevo2,
-      rightAttachLink(),
+      "right_tool_attach",
       "right_base_link",
       "",
       mc_rbdyn::RobotModule::ConnectionParameters{}
         .name(module_name)
-        .X_other_connection(rightAttachX())
         .bodySensorMapping({{"FloatingBase", "FloatingBase_RightHand"}}));
 
   return new mc_rbdyn::RobotModule(g1Both);
