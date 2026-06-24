@@ -144,18 +144,20 @@ G1RobotModule::G1RobotModule(const std::string & variant)
   auto& stabi = _lipmStabilizerConfig;
   stabi.leftFootSurface = "LeftFootCenter";
   stabi.rightFootSurface = "RightFootCenter";
-  stabi.torsoBodyName = "torso_link";
-  stabi.comHeight = 0.8;
+  stabi.torsoBodyName = "pelvis";
+  stabi.comHeight = 0.68;
   // clang-format off
   stabi.comActiveJoints = _ref_joint_order;
   // clang-format on
   stabi.torsoPitch = 0;
-  stabi.copAdmittance = Eigen::Vector2d{0.01, 0.01};
-  stabi.dcmPropGain = 5.0;
+  stabi.copAdmittance = Eigen::Vector2d{0.008, 0.008};
+  stabi.zmpcc.comAdmittance = Eigen::Vector2d{0.0, 0.0};
+  stabi.dcmPropGain = 4.0;
   stabi.dcmIntegralGain = 10;
-  stabi.dcmDerivGain = 0.0;
-  stabi.dcmDerivatorTimeConstant = 1;
-  stabi.dcmIntegratorTimeConstant = 10;
+  stabi.dcmDerivGain = 0.5;
+  stabi.dcmDerivatorTimeConstant = 5;
+  stabi.dcmIntegratorTimeConstant = 15;
+
 
 }
 
