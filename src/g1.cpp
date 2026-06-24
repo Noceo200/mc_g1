@@ -145,7 +145,7 @@ G1RobotModule::G1RobotModule(const std::string & variant)
   stabi.leftFootSurface = "LeftFootCenter";
   stabi.rightFootSurface = "RightFootCenter";
   stabi.torsoBodyName = "torso_link";
-  stabi.comHeight = 1.0;
+  stabi.comHeight = 0.8;
   // clang-format off
   stabi.comActiveJoints = _ref_joint_order;
   // clang-format on
