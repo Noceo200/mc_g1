@@ -144,7 +144,7 @@ G1RobotModule::G1RobotModule(const std::string & variant)
   auto& stabi = _lipmStabilizerConfig;
   stabi.leftFootSurface = "LeftFootCenter";
   stabi.rightFootSurface = "RightFootCenter";
-  stabi.torsoBodyName = "pelvis";
+  stabi.torsoBodyName = "torso_link";
   stabi.comHeight = 0.68;
   // clang-format off
   stabi.comActiveJoints = _ref_joint_order;
