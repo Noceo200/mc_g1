@@ -150,14 +150,12 @@ G1RobotModule::G1RobotModule(const std::string & variant)
   stabi.comActiveJoints = _ref_joint_order;
   // clang-format on
   stabi.torsoPitch = 0;
-  stabi.copAdmittance = Eigen::Vector2d{0.008, 0.008};
-  stabi.zmpcc.comAdmittance = Eigen::Vector2d{0.0, 0.0};
-  stabi.dcmPropGain = 4.0;
+  stabi.copAdmittance = Eigen::Vector2d{0.01, 0.01};
+  stabi.dcmPropGain = 5.0;
   stabi.dcmIntegralGain = 10;
-  stabi.dcmDerivGain = 0.5;
-  stabi.dcmDerivatorTimeConstant = 5;
-  stabi.dcmIntegratorTimeConstant = 15;
-
+  stabi.dcmDerivGain = 0.0;
+  stabi.dcmDerivatorTimeConstant = 1;
+  stabi.dcmIntegratorTimeConstant = 10;
 
 }
 
