@@ -117,6 +117,11 @@ G1RobotModule::G1RobotModule(const std::string & variant)
   }
 
   // Sensors
+  for (size_t i = 0; i < _ref_joint_order.size(); ++i) {
+    if (mb.jointIndexByName().count(_ref_joint_order[i]) != 0) {
+      _jointSensors.push_back(mc_rbdyn::JointSensor(_ref_joint_order[i])); // Add JointSensors for temperature/current logging
+    }
+  }
   _bodySensors.emplace_back("Accelerometer", "torso_link",sva::PTransformd(Eigen::Vector3d(-0.03959, -0.00224, 0.13792)));
   _bodySensors.emplace_back("FloatingBase", "pelvis", sva::PTransformd::Identity());
   _forceSensors.push_back(mc_rbdyn::ForceSensor("RightFootForceSensor", "right_ankle_roll_link", sva::PTransformd(Eigen::Vector3d(0.035, 0, -0.03))));
