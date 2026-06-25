@@ -107,25 +107,9 @@ G1RobotModule::G1RobotModule(const std::string & variant)
 
   _default_attitude = {{1., 0., 0., 0., 0., 0., 0.76}};
 
-  // Add JointSensors for temperature/current logging
-  for(size_t i = 0; i < _ref_joint_order.size(); ++i)
-  {
-    if(mb.jointIndexByName().count(_ref_joint_order[i]) != 0)
-    {
-      _jointSensors.push_back(mc_rbdyn::JointSensor(_ref_joint_order[i]));
-    }
-  }
-
   // Sensors
-  for (size_t i = 0; i < _ref_joint_order.size(); ++i) {
-    if (mb.jointIndexByName().count(_ref_joint_order[i]) != 0) {
-      _jointSensors.push_back(mc_rbdyn::JointSensor(_ref_joint_order[i])); // Add JointSensors for temperature/current logging
-    }
-  }
   _bodySensors.emplace_back("Accelerometer", "torso_link",sva::PTransformd(Eigen::Vector3d(-0.03959, -0.00224, 0.13792)));
   _bodySensors.emplace_back("FloatingBase", "pelvis", sva::PTransformd::Identity());
-  _forceSensors.push_back(mc_rbdyn::ForceSensor("RightFootForceSensor", "right_ankle_roll_link", sva::PTransformd(Eigen::Vector3d(0.035, 0, -0.03))));
-  _forceSensors.push_back(mc_rbdyn::ForceSensor("LeftFootForceSensor", "left_ankle_roll_link", sva::PTransformd(Eigen::Vector3d(0.035, 0, -0.03))));
 
   _minimalSelfCollisions = {mc_rbdyn::Collision("torso_link", "left_shoulder_yaw_link", 0.02, 0.001, 0.),
                             mc_rbdyn::Collision("torso_link", "right_shoulder_yaw_link", 0.02, 0.001, 0.),
@@ -142,26 +126,6 @@ G1RobotModule::G1RobotModule(const std::string & variant)
                             mc_rbdyn::Collision("left_ankle_pitch_link", "right_knee_link", 0.02, 0.01, 0.),
                             mc_rbdyn::Collision("right_ankle_pitch_link", "left_knee_link", 0.02, 0.01, 0.)};
   _commonSelfCollisions = _minimalSelfCollisions;
-
-  // Configure the stabilizer. Uses the default values of the
-  // StabilizerConfiguration except for where values specific to G1
-  // robot are required.
-  auto& stabi = _lipmStabilizerConfig;
-  stabi.leftFootSurface = "LeftFootCenter";
-  stabi.rightFootSurface = "RightFootCenter";
-  stabi.torsoBodyName = "torso_link";
-  stabi.comHeight = 0.68;
-  // clang-format off
-  stabi.comActiveJoints = _ref_joint_order;
-  // clang-format on
-  stabi.torsoPitch = 0;
-  stabi.copAdmittance = Eigen::Vector2d{0.008, 0.008};
-  stabi.zmpcc.comAdmittance = Eigen::Vector2d{0.0, 0.0};
-  stabi.dcmPropGain = 4.0;
-  stabi.dcmIntegralGain = 10;
-  stabi.dcmDerivGain = 0.5;
-  stabi.dcmDerivatorTimeConstant = 5;
-  stabi.dcmIntegratorTimeConstant = 15;
 
 
 }
